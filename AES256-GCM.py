@@ -42,7 +42,7 @@ def encrypt_file(path):
 def decrypt_file(path):
     try:
         # Read ciphertext from the input file
-        with open(input_file, 'rb') as f:
+        with open(path, 'rb') as f:
             ciphertext = f.read()
       
         # Load key, IV, and authentication tag from files
