@@ -32,10 +32,10 @@ def encrypt_file(path):
                     encrypted_chunk = executor.submit(encrypt_chunk, cipher, chunk).result()
                     outfile.write(encrypted_chunk)
 
-        # Finalize and save the authentication tag
-        tag = cipher.digest()
-        with open(_path + ".tag", 'wb') as f:
-            f.write(tag)
+            # Finalize and save the authentication tag
+            tag = cipher.digest()
+            with open(_path + ".tag", 'wb') as f:
+                f.write(tag)
         
         # Save key and IV
         with open(_path + ".key", 'wb') as f:
@@ -49,7 +49,7 @@ def encrypt_file(path):
 
 def decrypt_file(path):
     try:
-        _path = str(Path(path).with_suffix(''))
+        _path = str(Path(str(Path(path).with_suffix(''))).with_suffix(''))
 
         # Load key, IV, and tag
         with open(_path + ".key", 'rb') as f:
@@ -61,7 +61,7 @@ def decrypt_file(path):
 
         cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
 
-        with open(path, 'rb') as infile, open(decrypted_path, 'wb') as outfile:
+        with open(path, 'rb') as infile, open(str(Path(path).with_suffix('')), 'wb') as outfile:
             with ThreadPoolExecutor() as executor:
                 # Decrypt file in chunks
                 while chunk := infile.read(CHUNK_SIZE):
@@ -71,7 +71,7 @@ def decrypt_file(path):
             # Verify the authentication tag
             cipher.verify(tag)
 
-        print(f"File decrypted successfully: {decrypted_path}")
+        print(f"File decrypted successfully: {path}")
     except ValueError as e:
         print("Error: Authentication failed. Possible tampered file or incorrect key/IV.")
     except Exception as e:

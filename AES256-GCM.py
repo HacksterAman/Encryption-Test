@@ -46,7 +46,7 @@ def decrypt_file(path):
             ciphertext = f.read()
       
         # Load key, IV, and authentication tag from files
-        _path = str(Path(path).with_suffix(''))
+        _path = str(Path(str(Path(path).with_suffix(''))).with_suffix(''))
         with open(_path + ".key", 'rb') as f:
             key = f.read()
         with open(_path + ".iv", 'rb') as f:
@@ -59,7 +59,7 @@ def decrypt_file(path):
         plaintext = cipher.decrypt_and_verify(ciphertext, tag)
             
         # Save the decrypted data
-        with open(path, 'wb') as f:
+        with open(str(Path(path).with_suffix('')), 'wb') as f:
             f.write(plaintext)
         
         print(f"File decrypted successfully: {path}")
